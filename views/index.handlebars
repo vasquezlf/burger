@@ -1,0 +1,110 @@
+<main class="ui container segment red">
+  <!-- Header -->
+  <div class="ui segment">
+    <img src="../images/burger-header.jpg" alt="Hamburger picture header"/>
+    <h1 class="ui centered header">Eat-da-Burger</h1>
+  </div>
+
+  <!-- Input -->
+  <form class="ui form" id="createBurger">
+    <div class="field">
+      <textarea name="name" rows="3"></textarea>
+    </div>
+    <button class="ui button red" type="submit">Place Order</button>
+  </form>
+
+<!-- Grid -->
+  <div class="ui two column grid segment">
+
+    <div class="column">
+      <h3 class="ui header">Order</h3>
+      <hr>
+      <div class="ui divided items">
+
+        {{#each burgers}}
+        <div class="item">
+          <div class="middle aligned content">
+            {{this.name}}
+          </div>
+          <button data-burgerid="{{this.id}}" class="ui button inverted red deleteOrder updateOrder" id="{{this.id}}">
+            Eat Me!
+          </button>
+        </div>
+        {{/each}}
+
+      </div>
+    </div>
+
+
+    <div class="column">
+      <h3 class="ui header">Eaten</h3>
+      <hr>
+      <p>test</p>
+    </div>
+
+  </div>
+</main>
+
+<script type="text/javascript">
+
+  // CREATE
+  $("#createBurger").on("submit", (event) => {
+    event.preventDefault();
+
+    let newBurger = {
+      name: $("#createBurger [name=name]").val().trim()
+    };
+
+    console.log("newBurger: ", newBurger);
+
+    $.ajax("/api", {
+      type: "POST",
+      data: newBurger
+    }).then( () => {
+      console.log("Added new burger");
+
+      // Reload page to get updated list
+      location.reload();
+    });
+  });
+
+
+  // UPDATE
+  $(".updateOrder").on("submit", event => {
+    // event.preventDefault()
+    let id = $(event.target).attr("data-burgerid");
+
+    let updatedBurger = {
+      eaten: true
+    }
+
+    $.ajax("/api/"+id, {
+      type: "PUT",
+      data: updatedBurger
+    }).then( () => {
+      console.log("Updated id: ", id);
+      location.reload();
+    })
+  })
+
+
+  // DELETE
+  // $(".deleteOrder").on("click", (event) => {
+  //
+  //   let id = $(event.target).attr("data-burgerid");
+  //   // let id = $(this).attr("id");
+  //
+  //   console.log("Burgerid: ", id);
+  //   // Send DELETE request
+  //   $.ajax("/api/" + id, {
+  //     type: "DELETE"
+  //   }).then(
+  //     function() {
+  //       console.log("Deleted id ", id);
+  //
+  //       // Reload the page to get updated list
+  //       location.reload();
+  //     });
+  // });
+
+</script>
