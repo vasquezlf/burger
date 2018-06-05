@@ -68,24 +68,26 @@ app.post("/api", function(req, res) {
 });
 
 // Displays a single character, or returns false
-app.get("/api/list/:id", function(req, res) {
-  var chosen = req.params.id;
-
-  console.log(chosen);
-
-  for (var i = 0; i < result.length; i++) {
-    if (chosen === result[i].routeName) {
-      return res.json(result[i]);
-    }
-  }
-
-  return res.json(false);
-});
+// app.get("/api/list/:id", function(req, res) {
+//   var chosen = req.params.id;
+//
+//   console.log(chosen);
+//
+//   for (var i = 0; i < result.length; i++) {
+//     if (chosen === result[i].routeName) {
+//       return res.json(result[i]);
+//     }
+//   }
+//
+//   return res.json(false);
+// });
 
 
 // Update a burger order. When "Eat Me!" button is clicked, eaten boolean is marked true
 app.put("/api/:id", (req, res) => {
-  connection.query("UPDATE burger SET eaten = ? WHERE id = ?"), [1,req.params.id], (err, result) => {
+
+  console.log(req.body);
+  connection.query("UPDATE burger SET eaten = 1 WHERE id = ?", [req.params.id], (err, result) => {
     if (err) {
       return res.status(500).end();
     }
@@ -96,25 +98,26 @@ app.put("/api/:id", (req, res) => {
     }
 
     // res.json({id: result.insertId})
+    // console.log("this.sql: ", this.sql);
     res.status(200).end();
-  }
-})
+  });
+});
 
 
 // DELETE a burger order
-// app.delete("/api/:id", (req, res) => {
-//   connection.query("DELETE FROM burger WHERE id = ?", [req.params.id], (err, result) => {
-//     if(err) {
-//       return res.status(500).end();
-//     }
-//     else if (result.changedRows === 0) {
-//           // If no rows were changed, then ID must not exist, so 404
-//       return res.status(404).end();
-//     }
-//     res.status(200).end();
-//
-//   })
-// });
+app.delete("/api/:id", (req, res) => {
+  connection.query("DELETE FROM burger WHERE id = ?", [req.params.id], (err, result) => {
+    if(err) {
+      return res.status(500).end();
+    }
+    else if (result.changedRows === 0) {
+          // If no rows were changed, then ID must not exist, so 404
+      return res.status(404).end();
+    }
+    res.status(200).end();
+
+  });
+});
 // ******** ROUTES END
 
 // Start our server so that it can begin listening to client requests.

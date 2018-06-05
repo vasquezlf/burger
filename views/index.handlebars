@@ -22,14 +22,16 @@
       <div class="ui divided items">
 
         {{#each burgers}}
+        {{#unless this.eaten}}
         <div class="item">
           <div class="middle aligned content">
             {{this.name}}
           </div>
-          <button data-burgerid="{{this.id}}" class="ui button inverted red deleteOrder updateOrder" id="{{this.id}}">
+          <button data-burgerid="{{this.id}}" class="ui button inverted red updateOrder" id="{{this.id}}">
             Eat Me!
           </button>
         </div>
+        {{/unless}}
         {{/each}}
 
       </div>
@@ -39,7 +41,20 @@
     <div class="column">
       <h3 class="ui header">Eaten</h3>
       <hr>
-      <p>test</p>
+      <div class="ui divided items">
+        {{#each burgers}}
+        {{#if this.eaten}}
+        <div class="item">
+          <div class="middle aligned content">
+            {{this.name}}
+          </div>
+          <button data-burgerid="{{this.id}}" class="ui button inverted orange deleteOrder" id="{{this.id}}">
+            Purge
+          </button>
+        </div>
+        {{/if}}
+        {{/each}}
+      </div>
     </div>
 
   </div>
@@ -70,10 +85,11 @@
 
 
   // UPDATE
-  $(".updateOrder").on("submit", event => {
+  $(".updateOrder").on("click", (event) => {
     // event.preventDefault()
     let id = $(event.target).attr("data-burgerid");
 
+    // console.log(".updateOder: ", id);
     let updatedBurger = {
       eaten: true
     }
@@ -88,23 +104,23 @@
   })
 
 
-  // DELETE
-  // $(".deleteOrder").on("click", (event) => {
-  //
-  //   let id = $(event.target).attr("data-burgerid");
-  //   // let id = $(this).attr("id");
-  //
-  //   console.log("Burgerid: ", id);
-  //   // Send DELETE request
-  //   $.ajax("/api/" + id, {
-  //     type: "DELETE"
-  //   }).then(
-  //     function() {
-  //       console.log("Deleted id ", id);
-  //
-  //       // Reload the page to get updated list
-  //       location.reload();
-  //     });
-  // });
+
+
+  // DELETE fom database
+  $(".deleteOrder").on("click", (event) => {
+
+    let id = $(event.target).attr("data-burgerid");
+    // let id = $(this).attr("id");
+
+    // Send DELETE request
+    $.ajax("/api/" + id, {
+      type: "DELETE"
+    }).then( () => {
+        console.log("Deleted id ", id);
+
+        // Reload the page to get updated list
+        location.reload();
+      });
+  });
 
 </script>
